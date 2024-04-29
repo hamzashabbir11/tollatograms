@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grams to Tolla Converter</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 50px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .gold-card {
+      border-color: #b58504; /* Gold color */
+    }
+    .gold-header {
+      background-color: #b58504; /* Gold color */
+      color: black; /* Text color */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center mb-4">Grams to Tolla Converter</h1>
+    <form id="converter-form">
+      <div class="form-group">
+        <label for="grams">Grams</label>
+        <input type="number" class="form-control" id="grams" placeholder="Enter grams" oninput="convert('grams')">
+      </div>
+      <div class="form-group">
+        <label for="tolla">Tolla</label>
+        <input type="number" class="form-control" id="tolla" placeholder="Enter tolla" oninput="convert('tolla')">
+      </div>
+    </form>
+
+    <div class="card mt-4 gold-card">
+      <div class="card-header gold-header">
+        Gold Rate
+      </div>
+      <div class="card-body" id="gold-rate">
+        Loading...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function convert(unit) {
+      if (unit === 'grams') {
+        var grams = parseFloat(document.getElementById("grams").value);
+        var tolla = grams / 11.664;
+        document.getElementById("tolla").value = tolla.toFixed(2);
+      } else if (unit === 'tolla') {
+        var tolla = parseFloat(document.getElementById("tolla").value);
+        var grams = tolla * 11.664;
+        document.getElementById("grams").value = grams.toFixed(2);
+      }
+    }
+
+    // Fetch gold rate from the provided API
+    fetch('https://www.goldapi.io/api/XAU/USD', {
+      method: 'GET',
+      headers: {
+        'x-access-token': 'goldapi-3xq0v19lvlaaslx-io'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('gold-rate').innerHTML = 'Current Gold Rate: ' + data.price + ' USD per gram';
+      })
+      .catch(error => {
+        console.error('Error fetching gold rate:', error);
+        document.getElementById('gold-rate').innerHTML = 'Error fetching gold rate';
+      });
+  </script>
+</body>
+</html>
